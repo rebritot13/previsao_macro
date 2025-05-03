@@ -1,0 +1,6 @@
+fastparquet==2024.11.0 ; 
+mizani==0.11.4 ; 
+pandas==2.2.3 ; 
+plotnine==0.13.6 ; 
+shiny==1.4.0 ; 
+shinyswatch==0.7.0 ; 
