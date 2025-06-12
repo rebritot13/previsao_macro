@@ -1,3 +1,7 @@
+import os, time 
+import datetime
+from datetime import datetime, timedelta
+
 # Planilha de metadados
 df_metadados = pd.read_excel(
     io = "https://docs.google.com/spreadsheets/d/1x8Ugm7jVO7XeNoxiaFPTPm1mfVc3JUNvvVqVjCioYmE/export?format=xlsx",
