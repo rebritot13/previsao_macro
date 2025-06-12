@@ -1,3 +1,7 @@
+import os, time 
+import datetime
+from datetime import datetime, timedelta
+
 # Cria pasta dados se não existir
 pasta = "dados"
 if not os.path.exists(pasta):
