@@ -1,3 +1,7 @@
+import os, time 
+import datetime
+from datetime import datetime, timedelta
+
 # Retenta ler um CSV se falhar download
 def ler_csv(*args, **kwargs):
   max_tentativas = 5
