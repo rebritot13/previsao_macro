@@ -1,4 +1,3 @@
-
 # Retenta ler um CSV se falhar download
 def ler_csv(*args, **kwargs):
   max_tentativas = 5
@@ -93,11 +92,15 @@ def coleta_ipeadata(codigo, nome):
   except:
     raise Exception(f"Falha na coleta da série {codigo} ({nome})")
   else:
-    return (
+    df = (
         pd.DataFrame.from_records(resposta["value"])
         .rename(columns = {"VALVALOR": nome, "VALDATA": "data"})
         .filter(["data", nome])
       )
+  if df.empty:
+    raise Exception(f"Falha na coleta da série {codigo} ({nome})")
+  else:
+    return df
 
 # Coleta dados da API do IBGE (SIDRA)
 def coleta_ibge_sidra(codigo, nome):
