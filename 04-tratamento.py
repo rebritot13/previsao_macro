@@ -1,3 +1,6 @@
+## BCB/SGS
+"""
+
 # Cruza dados do BCB/SGS
 df_tratado_bcb_sgs = df_bruto_bcb_sgs.copy()
 
@@ -6,6 +9,8 @@ for f in df_tratado_bcb_sgs.items():
   for df in f[1][1:]:
     df_temp = df_temp.join(other = df, how = "outer")
   df_tratado_bcb_sgs[f[0]] = df_temp
+
+df_tratado_bcb_sgs["Mensal"]
 
 # Agrega dados de frequência diária para mensal por média ou início de mês
 df_tratado_bcb_sgs["Mensal"] = df_tratado_bcb_sgs["Mensal"].join(
@@ -30,7 +35,9 @@ df_tratado_bcb_sgs["Mensal"] = df_tratado_bcb_sgs["Mensal"].join(
     ),
     how = "outer"
 )
+df_tratado_bcb_sgs["Mensal"]
 
+"""## BCB/ODATA"""
 
 # Filtra expectativas curto prazo ~1 mês à frente e agrega pela média
 df_tratado_bcb_odata_ipca_cp = (
@@ -44,6 +51,7 @@ df_tratado_bcb_odata_ipca_cp = (
     .groupby(["data"], as_index = False)["expec_ipca_top5_curto_prazo"]
     .mean()
 )
+df_tratado_bcb_odata_ipca_cp
 
 # Filtra expectativas médio prazo ~6 mês à frente e agrega pela média
 df_tratado_bcb_odata_ipca_mp = (
@@ -57,6 +65,7 @@ df_tratado_bcb_odata_ipca_mp = (
     .groupby(["data"], as_index = False)["expec_ipca_top5_medio_prazo"]
     .mean()
 )
+df_tratado_bcb_odata_ipca_mp
 
 # Filtra expectativas longo prazo ~1 ano à frente e agrega pela média
 df_tratado_bcb_odata_selic = (
@@ -70,6 +79,7 @@ df_tratado_bcb_odata_selic = (
     .groupby(["data"], as_index = False)["expec_selic"]
     .mean()
 )
+df_tratado_bcb_odata_selic
 
 # Filtra expectativas curto prazo ~1 mês à frente e agrega pela média
 df_tratado_bcb_odata_cambio = (
@@ -83,6 +93,7 @@ df_tratado_bcb_odata_cambio = (
     .groupby(["data"], as_index = False)["expec_cambio"]
     .mean()
 )
+df_tratado_bcb_odata_cambio
 
 # Filtra expectativas curto prazo ~12 meses à frente e agrega pela média
 df_tratado_bcb_odata_ipca_lp = (
@@ -91,6 +102,7 @@ df_tratado_bcb_odata_ipca_lp = (
     .groupby(["data"], as_index = False)["expec_ipca_12m"]
     .mean()
 )
+df_tratado_bcb_odata_ipca_lp
 
 # Filtra expectativas médio prazo ~9 meses à frente e agrega pela média
 df_tratado_bcb_odata_pib = (
@@ -107,6 +119,7 @@ df_tratado_bcb_odata_pib = (
     .groupby(["data"], as_index = False)["expec_pib"]
     .mean()
 )
+df_tratado_bcb_odata_pib
 
 # Filtra expectativas longo prazo ~1 ano à frente e agrega pela média
 df_tratado_bcb_odata_primario = (
@@ -120,6 +133,7 @@ df_tratado_bcb_odata_primario = (
     .groupby(["data"], as_index = False)["expec_primario"]
     .mean()
 )
+df_tratado_bcb_odata_primario
 
 # Cruza dados de mesma frequência
 df_tratado_bcb_odata_lista = [
@@ -138,6 +152,9 @@ for df in df_tratado_bcb_odata_lista:
       how = "outer"
       )
 
+df_tratado_bcb_odata_mensal
+
+"""## IPEADATA"""
 
 # Cruza dados do IPEADATA
 df_tratado_ipeadata = df_bruto_ipeadata.copy()
@@ -150,6 +167,8 @@ for f in df_tratado_ipeadata.items():
         how = "outer"
         )
   df_tratado_ipeadata[f[0]] = df_temp
+
+df_tratado_ipeadata["Mensal"]
 
 # Agrega dados de frequência diária para mensal por média
 df_tratado_ipeadata["Mensal"] = (
@@ -170,7 +189,9 @@ df_tratado_ipeadata["Mensal"] = (
       )
     .query("index >= '2000-01-01'")
 )
+df_tratado_ipeadata["Mensal"]
 
+"""## IBGE/SIDRA"""
 
 # Cruza dados do IBGE/SIDRA
 df_tratado_ibge_sidra = df_bruto_ibge_sidra.copy()
@@ -204,25 +225,31 @@ for f in df_tratado_ibge_sidra.items():
         )
   df_tratado_ibge_sidra[f[0]] = df_temp
 
+df_tratado_ibge_sidra["Mensal"]
+
+"""## FRED"""
 
 # Cruza dados do FRED
 df_tratado_fred = df_bruto_fred.copy()
 
 for f in df_tratado_fred.items():
-  df_temp = f[1][0].set_index("data")
+  df_temp = f[1][0].assign(observation_date = lambda x: pd.to_datetime(x.observation_date)).set_index("observation_date")
   for df in f[1][1:]:
     df_temp = df_temp.join(
-        other = df.set_index("data"),
+        other = df.assign(observation_date = lambda x: pd.to_datetime(x.observation_date)).set_index("observation_date"),
         how = "outer"
         )
+  df_temp = df_temp.rename_axis(index='data')
   df_tratado_fred[f[0]] = df_temp
 
 # Agrega dados de frequência diária para mensal por média
 df_tratado_fred["Mensal"] = (
     df_tratado_fred["Mensal"]
+    .set_index(pd.to_datetime(df_tratado_fred["Mensal"].index))
     .join(
         other = (
             df_tratado_fred["Diária"]
+            .set_index(pd.to_datetime(df_tratado_fred["Diária"].index))
             .resample("MS")
             .mean()
         ),
@@ -231,6 +258,7 @@ df_tratado_fred["Mensal"] = (
     .query("index >= '2000-01-01'")
 )
 
+"""## IFI"""
 
 # Representa em porcentagem dados do IFI
 df_tratado_ifi = (
@@ -240,3 +268,4 @@ df_tratado_ifi = (
     .drop(labels = ["lim_inf", "lim_sup"], axis = "columns")
     .set_index("data")
 )
+df_tratado_ifi
