@@ -3,7 +3,9 @@ df_metadados = pd.read_excel(
     io = "https://docs.google.com/spreadsheets/d/1x8Ugm7jVO7XeNoxiaFPTPm1mfVc3JUNvvVqVjCioYmE/export?format=xlsx",
     sheet_name = "Metadados"
     )
+df_metadados.head()
 
+"""## BCB/SGS"""
 
 # Coleta dados do BCB/SGS
 input_bcb_sgs = (
@@ -18,10 +20,12 @@ for serie in input_bcb_sgs.index:
   ser = input_bcb_sgs.iloc[serie]
   df_temp = coleta_bcb_sgs(
       codigo = ser["Input de Coleta"],
-      nome = ser["Identificador"]
+      nome = ser["Identificador"],
+      freq = ser["Frequência"]
       )
   df_bruto_bcb_sgs[ser["Frequência"]].append(df_temp)
 
+"""## BCB/ODATA"""
 
 # Coleta dados do BCB/ODATA
 input_bcb_odata = (
@@ -40,6 +44,7 @@ for serie in input_bcb_odata.index:
       )
   df_bruto_bcb_odata.append(df_temp)
 
+"""## IPEADATA"""
 
 # Coleta dados do IPEADATA
 input_ipeadata = (
@@ -58,6 +63,7 @@ for serie in input_ipeadata.index:
       )
   df_bruto_ipeadata[ser["Frequência"]].append(df_temp)
 
+"""## IBGE/SIDRA"""
 
 # Coleta dados do IBGE/SIDRA
 input_sidra = (
@@ -76,6 +82,7 @@ for serie in input_sidra.index:
       )
   df_bruto_ibge_sidra[ser["Frequência"]].append(df_temp)
 
+"""## FRED"""
 
 # Coleta dados do FRED
 input_fred = (
@@ -94,6 +101,7 @@ for serie in input_fred.index:
       )
   df_bruto_fred[ser["Frequência"]].append(df_temp)
 
+"""## IFI"""
 
 # Coleta dados do IFI
 input_ifi = (
