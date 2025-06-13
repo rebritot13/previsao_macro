@@ -2,8 +2,8 @@ import os, time
 import datetime
 from datetime import datetime, timedelta
 
-## BCB/SGS
-"""
+'''## BCB/SGS'''
+
 
 # Cruza dados do BCB/SGS
 df_tratado_bcb_sgs = df_bruto_bcb_sgs.copy()
