@@ -105,13 +105,22 @@ x_reg = [
 
 
 # Reestima melhor modelo com amostra completa
+y_clean = y.copy()
+x_reg_clean = x_reg.copy()
+
+y_clean = y_clean.fillna(method = 'bfill')
+y_clean = y_clean.fillna(method = 'ffill')
+
+x_reg_clean = x_reg_clean.fillna(method = 'bfill')
+x_reg_clean = x_reg_clean.fillna(method = 'ffill')
+
 forecaster = ForecasterAutoreg(
     regressor = BayesianRidge(),
     lags = 1,
     transformer_y = PowerTransformer(),
     transformer_exog = PowerTransformer()
     )
-forecaster.fit(y, x[x_reg])
+forecaster.fit(y_clean, x[x_reg_clean])
 
 
 # Período de previsão fora da amostra
