@@ -3,7 +3,7 @@
         "server_url": "https://api.shinyapps.io",
         "filename": "/home/runner/work/previsao_macro/previsao_macro",
         "app_url": "https://stqal3-renan-brito.shinyapps.io/previsao_macro/",
-        "app_id": 15010577,
+        "app_id": "15010577",
         "app_guid": null,
         "title": "previsao_macro",
         "app_mode": "python-shiny",
